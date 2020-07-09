@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+
+			<div class="p-grid p-justify-center">
+				<div class="p-col-6">
+
+					<div class="p-grid">
+						<div class="p-col-4">
+							<p:outputLabel value="Nome:" />
+						</div>
+						<div class="p-col-8">
+							<p:inputText value="#{tarefamb.tarefa.nome}"
+								disabled="#{not tarefamb.souGerente}" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4">
+							<p:outputLabel value="Descrição:" />
+						</div>
+						<div class="p-col-8">
+							<p:inputTextarea value="#{tarefamb.tarefa.descricao}"
+								styleClass="width-100-percent"
+								disabled="#{not tarefamb.souGerente}" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4">
+							<p:outputLabel value="Duração prevista em horas:" />
+						</div>
+						<div class="p-col-8">
+							<p:spinner min="1"
+								value="#{tarefamb.tarefa.duracaoPrevistaEmHoras}"
+								disabled="#{not tarefamb.souGerente and not tarefamb.souResponsavel}" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4">
+							<p:outputLabel value="Sprint:" />
+						</div>
+						<div class="p-col-8">
+							<p:selectOneMenu value="#{tarefamb.tarefa.sprintId}"
+								disabled="#{not tarefamb.souGerente}">
+								<f:selectItems value="#{tarefamb.sprintsCombo}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4">
+							<p:outputLabel value="Responsável:" />
+						</div>
+						<div class="p-col-8">
+							<p:selectOneMenu value="#{tarefamb.tarefa.usuarioId}"
+								disabled="#{not tarefamb.souGerente}">
+								<f:selectItem itemValue="" itemLabel="" noSelectionOption="true" />
+								<f:selectItems value="#{tarefamb.usuariosCombo}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4">
+							<p:outputLabel value="Status:" />
+						</div>
+						<div class="p-col-8">
+							<p:selectOneMenu value="#{tarefamb.tarefa.status}"
+								disabled="#{not tarefamb.souGerente and not tarefamb.souResponsavel}">
+								<f:selectItems value="#{tarefamb.allStatusTarefa}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="p-grid p-justify-end">
+						<div class="p-col-3">
+							<p:commandButton value="Cancelar" icon="ui-icon-close"
+								styleClass="width-100-percent"
+								actionListener="#{tarefamb.cancelar()}" />
+						</div>
+
+						<div class="p-col-3">
+							<p:commandButton value="Salvar" icon="ui-icon-check"
+								styleClass="width-100-percent"
+								actionListener="#{tarefamb.salvarTarefa()}"
+								disabled="#{not tarefamb.souGerente and not tarefamb.souResponsavel}" />
+						</div>
+					</div>
+
+					<p:messages showDetail="true" closable="true" for="tarefa-message">
+						<p:autoUpdate />
+					</p:messages>
+
+
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

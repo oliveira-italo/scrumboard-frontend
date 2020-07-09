@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form id="id-form-kanban">
+
+			<div style="margin-bottom: 20px;">
+				<p:commandButton value=" voltar para projetos"
+					icon="ui-icon-arrowreturnthick-1-w"
+					actionListener="#{kanbanmb.voltarParaProjetos()}" />
+			</div>
+
+			<div>
+				<p:outputLabel value="#{kanbanmb.projeto.nome}" />
+			</div>
+			<div>
+				<p:outputLabel value="#{kanbanmb.projeto.descricao}" />
+			</div>
+
+			<div class="p-grid" style="margin-top: 20px;">
+				<div class="p-col">
+					<p:outputPanel id="id-panel-combo-sprints">
+						<div>
+							<p:outputLabel value="Sprints:" />
+						</div>
+						<div>
+							<p:selectOneMenu value="#{kanbanmb.selectedSprintCombo}">
+								<p:ajax listener="#{kanbanmb.onSprintChange()}" />
+
+								<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{kanbanmb.sprintsCombo}" />
+							</p:selectOneMenu>
+						</div>
+
+					</p:outputPanel>
+				</div>
+
+				<div class="p-col-4">
+					<p:outputLabel value="#{kanbanmb.sprint.toString()}" />
+				</div>
+
+				<div class="p-col" />
+
+				<div class="p-col">
+					<p:commandButton value="Sprint" icon="ui-icon-plus"
+						styleClass="width-100-percent"
+						actionListener="#{kanbanmb.novaSprint()}"
+						rendered="#{kanbanmb.souGerente}" />
+				</div>
+
+				<div class="p-col">
+					<p:commandButton disabled="#{kanbanmb.selectedSprintCombo eq null}"
+						value="Sprint" icon="ui-icon-pencil"
+						styleClass="width-100-percent"
+						onclick="PF('dialog-dados-sprint').show()"
+						rendered="#{kanbanmb.souGerente}" />
+				</div>
+
+				<div class="p-col">
+					<p:commandButton value="Tarefa" icon="ui-icon-plus"
+						styleClass="width-100-percent"
+						disabled="#{kanbanmb.selectedSprintCombo eq null}"
+						actionListener="#{kanbanmb.novaTarefa()}"
+						rendered="#{kanbanmb.souGerente}" />
+				</div>
+			</div>
+
+			<div class="p-grid" style="margin-top: 20px; margin-bottom: 20px;">
+
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.backlog}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Backlog">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '--' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.emDesenvolvimento}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Em desenvolvimento">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.emTeste}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Em teste">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.bloqueada}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Bloqueada">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.prontaParaProducao}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Pronta para produção">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.emProducao}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Em produção">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="p-col" style="height: 100px;">
+					<p:dataTable value="#{kanbanmb.cancelada}" var="tarefa"
+						rendered="#{kanbanmb.selectedSprintCombo != null}" emptyMessage="">
+						<p:column headerText="Cancelada">
+							<div style="margin-bottom: 5px;">
+								<p:commandLink value="#{tarefa.nome}"
+									actionListener="#{kanbanmb.editarTarefa(tarefa.id)}" />
+							</div>
+							<div style="margin-bottom: 10px;">
+								<p:outputLabel
+									value="#{tarefa.usuario eq null ? '' : tarefa.usuario.nome}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+		</h:form>
+
+		<h:form id="form-dialog-dados-sprint">
+
+			<p:dialog widgetVar="dialog-dados-sprint" closable="true"
+				modal="true" header="#{kanbanmb.sprint.nome}">
+
+				<div class="dialog-box">
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Início da sprint:" />
+						</div>
+
+						<div class="p-col-8">
+							<p:calendar pattern="dd/MM/yyyy"
+								value="#{kanbanmb.sprint.inicio}"
+								converter="local-date-converter" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Final da sprint:" />
+						</div>
+
+						<div class="p-col-8">
+							<p:calendar pattern="dd/MM/yyyy" value="#{kanbanmb.sprint.fim}"
+								converter="local-date-converter" />
+						</div>
+					</div>
+
+					<div class="p-grid p-justify-end">
+						<div class="p-col-4">
+							<p:commandButton actionListener="#{kanbanmb.salvarSprint()}"
+								value="Salvar" icon="ui-icon-check"
+								styleClass="width-100-percent">
+							</p:commandButton>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

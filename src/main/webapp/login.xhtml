@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<div class="height-100-vh">
+
+			<h:form>
+
+				<div class="p-grid">
+					<div class="p-col-6 height-100-percent">
+
+						<div class="big-title-div">
+							<p:outputLabel styleClass="big-title-text"
+								value="Fazer login no Scrum Board" />
+						</div>
+
+						<div class="p-grid p-justify-center">
+							<div class="p-col-6">
+
+								<p:messages showDetail="true" closable="true"
+									for="login-message">
+									<p:autoUpdate />
+								</p:messages>
+
+								<div class="little-margin-around">
+									<p:inputText placeholder="Email" value="#{login.usuarioLogin}"></p:inputText>
+								</div>
+
+								<div class="little-margin-around">
+									<p:inputText placeholder="Senha" value="#{login.senhaLogin}"></p:inputText>
+								</div>
+
+								<div class="little-margin-around">
+									<p:commandButton value="Login"
+										actionListener="#{login.login()}"></p:commandButton>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="p-col-6 left-border height-100-percent">
+
+						<div class="big-title-div">
+							<p:outputLabel styleClass="big-title-text"
+								value="Crie sua conta no Scrum Board" />
+						</div>
+
+						<div class="p-grid p-justify-center">
+							<div class="p-col-6">
+
+								<p:messages showDetail="true" closable="true"
+									for="cadastro-message">
+									<p:autoUpdate />
+								</p:messages>
+
+								<div class="little-margin-around">
+									<p:inputText placeholder="Nome"
+										value="#{login.usuarioForm.nome}"></p:inputText>
+								</div>
+
+								<div class="little-margin-around">
+									<p:inputText placeholder="Email"
+										value="#{login.usuarioForm.email}"></p:inputText>
+								</div>
+
+								<div class="little-margin-around">
+									<p:password placeholder="Senha"
+										value="#{login.usuarioForm.senha}"></p:password>
+								</div>
+
+								<div class="little-margin-around">
+									<p:commandButton value="Cadastre-se"
+										actionListener="#{login.cadastrar()}"></p:commandButton>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</h:form>
+
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+
+			<div class="p-grid">
+				<div class="p-col-6">
+					<div>
+						<p:commandButton icon="ui-icon-plus" value="Crie seu novo projeto"
+							actionListener="#{usuario.novoProjeto()}" />
+					</div>
+				</div>
+				<div class="p-col-6">
+					<div class="right-align">
+
+						<div>
+							<p:outputLabel value="#{usuario.usuario.nome}" />
+						</div>
+						<div>
+							<p:outputLabel value="#{usuario.usuario.email}" />
+						</div>
+						<div>
+							<p:commandButton icon="ui-icon-pencil" value="Editar"
+								onclick="PF('dialog-edit-usuario').show()" />
+							<p:commandButton icon=" ui-icon-arrowreturn-1-w" iconPos="left"
+								value="Logout" actionListener="#{usuario.logout()}" />
+						</div>
+
+
+
+
+					</div>
+				</div>
+			</div>
+
+			<div class="p-grid">
+				<div class="p-col-6">
+					<div>
+						<p:outputLabel value="Projetos em que você está alocado"></p:outputLabel>
+					</div>
+					<p:tabView>
+						<p:tab title="Ativos">
+							<p:dataTable value="#{usuario.projetosAtivosAlocacao}"
+								var="projeto" emptyMessage="">
+
+								<p:column headerText="Projeto">
+									<p:outputLabel value="#{projeto.nome}"></p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Gerente">
+									<p:outputLabel value="#{projeto.gerente.nome}"></p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Ver kanban"
+									styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-search"
+										actionListener="#{usuario.abrirKanban(projeto.id)}" />
+								</p:column>
+
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="Inativos">
+							<p:dataTable value="#{usuario.projetosInativosAlocacao}"
+								var="projeto" emptyMessage="">
+
+								<p:column headerText="Projeto">
+									<p:outputLabel value="#{projeto.nome}"></p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Gerente">
+									<p:outputLabel value="#{projeto.gerente.nome}"></p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Ver kanban"
+									styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-search"
+										actionListener="#{usuario.abrirKanban(projeto.id)}" />
+								</p:column>
+
+							</p:dataTable>
+						</p:tab>
+					</p:tabView>
+				</div>
+
+				<div class="p-col-6">
+					<div>
+						<p:outputLabel value="Projetos que você gerencia"></p:outputLabel>
+					</div>
+					<p:tabView>
+						<p:tab title="Ativos">
+							<p:dataTable value="#{usuario.projetosAtivosGerencia}"
+								var="projeto" emptyMessage="">
+
+								<p:column headerText="Projeto">
+									<p:outputLabel value="#{projeto.nome}"></p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Ver kanban"
+									styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-search"
+										actionListener="#{usuario.abrirKanban(projeto.id)}" />
+								</p:column>
+
+								<p:column headerText="Editar" styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-pencil"
+										actionListener="#{usuario.editarProjeto(projeto.id)}"></p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="Inativos">
+							<p:dataTable value="#{usuario.projetosInativosGerencia}"
+								var="projeto" emptyMessage="">
+
+								<p:column headerText="Projeto">
+									<p:outputLabel value="#{projeto.nome}"></p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Ver kanban"
+									styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-pencil"
+										actionListener="#{usuario.abrirKanban(projeto.id)}" />
+								</p:column>
+
+								<p:column headerText="Editar" styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-search"></p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+						</p:tab>
+					</p:tabView>
+				</div>
+			</div>
+
+			<p:dialog widgetVar="dialog-edit-usuario" closable="true"
+				modal="true">
+
+				<div class="dialog-box">
+					<div class="p-grid">
+						<div class="p-col-6">
+							<p:outputLabel value="Nome:"></p:outputLabel>
+						</div>
+						<div class="p-col-6">
+							<p:inputText value="#{usuario.usuario.nome}"></p:inputText>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-6">
+							<p:outputLabel value="Email:"></p:outputLabel>
+						</div>
+						<div class="p-col-6">
+							<p:inputText value="#{usuario.usuario.email}"></p:inputText>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-6">
+							<p:outputLabel value="Senha:"></p:outputLabel>
+						</div>
+						<div class="p-col-6">
+							<p:inputText value="#{usuario.usuario.senha}"></p:inputText>
+						</div>
+					</div>
+
+					<div class="p-grid p-justify-end">
+						<div class="p-col-4">
+							<p:commandButton actionListener="#{usuario.atualizarUsuario()}"
+								value="Salvar" icon="ui-icon-check"
+								styleClass="width-100-percent" update="@form"
+								oncomplete="PF('dialog-edit-usuario').hide()"></p:commandButton>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

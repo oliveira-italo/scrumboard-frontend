@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+
+			<div class="p-grid p-justify-center">
+				<div class="p-col-6">
+
+					<div class="p-grid">
+						<div class="p-col-12">
+							<p:messages showDetail="true" closable="true"
+								for="projeto-message">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Nome:" />
+						</div>
+						<div class="p-col-8">
+							<p:inputText value="#{projetomb.projeto.nome}" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Descrição:" />
+						</div>
+						<div class="p-col-8">
+							<p:inputText value="#{projetomb.projeto.descricao}" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Data inicial prevista:" />
+						</div>
+						<div class="p-col-8">
+							<p:calendar pattern="dd/MM/yyyy"
+								value="#{projetomb.projeto.inicioPrevisto}"
+								converter="local-date-converter" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Data final prevista:" />
+						</div>
+						<div class="p-col-8">
+							<p:calendar pattern="dd/MM/yyyy"
+								value="#{projetomb.projeto.fimPrevisto}"
+								converter="local-date-converter" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Data inicial efetiva:" />
+						</div>
+						<div class="p-col-8">
+							<p:calendar pattern="dd/MM/yyyy"
+								value="#{projetomb.projeto.inicioEfetivo}"
+								converter="local-date-converter" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Data final efetiva:" />
+						</div>
+						<div class="p-col-8">
+							<p:calendar pattern="dd/MM/yyyy"
+								value="#{projetomb.projeto.fimEfetivo}"
+								converter="local-date-converter" />
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Status:" />
+						</div>
+						<div class="p-col-4">
+							<p:selectOneMenu value="#{projetomb.projeto.status}">
+								<f:selectItems value="#{projetomb.statusValues}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-4 right-align">
+							<p:outputLabel value="Usuários alocados" />
+						</div>
+						<div class="p-col-8">
+							<div style="margin-bottom: 5px;">
+								<p:commandButton icon="ui-icon-plus" value="Alocar usuário"
+									onclick="PF('dialog-alocacao-usuario').show()" />
+							</div>
+
+							<p:dataTable value="#{projetomb.projeto.usuariosAlocados}"
+								var="usuarioAlocado" emptyMessage="">
+								<p:column headerText="Nome">
+									<p:outputLabel value="#{usuarioAlocado.nome}" />
+								</p:column>
+
+								<p:column headerText="Email">
+									<p:outputLabel value="#{usuarioAlocado.email}" />
+								</p:column>
+
+								<p:column headerText="Desalocar" styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-trash"
+										actionListener="#{projetomb.desalocarUsuario(usuarioAlocado)}"
+										update="@form" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+
+					<div class="p-grid p-justify-end">
+						<div class="p-col-3">
+							<p:commandButton value="Cancelar" icon="ui-icon-check"
+								styleClass="width-100-percent"
+								actionListener="#{projetomb.cancelar()}" update="@form" />
+						</div>
+						<div class="p-col-3">
+							<p:commandButton value="Salvar" icon="ui-icon-check"
+								styleClass="width-100-percent"
+								actionListener="#{projetomb.salvar()}" update="@form" />
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<p:dialog widgetVar="dialog-alocacao-usuario" closable="false"
+				modal="true" header="Alocar usuário">
+
+				<div class="dialog-box">
+
+					<div class="p-grid">
+						<div class="p-col-12">
+							<p:messages showDetail="true" closable="true"
+								for="alocacao-usuario-message">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+					</div>
+
+					<div class="p-grid">
+						<div class="p-col-10">
+							<p:inputText placeholder="Pesquise por nome ou email"
+								value="#{projetomb.paramPesquisaUsuario}"></p:inputText>
+						</div>
+						<div class="p-col-2">
+							<p:commandButton icon="ui-icon-search"
+								styleClass="width-100-percent"
+								actionListener="#{projetomb.pesquisaUsuarioParaAlocacao()}"
+								update="#{p:component('id-table-result-pesquisa-usuario-alocacao')}" />
+						</div>
+					</div>
+
+					<p:outputPanel styleClass="p-grid">
+						<p:outputPanel styleClass="p-col-12"
+							id="id-table-result-pesquisa-usuario-alocacao">
+							<p:dataTable value="#{projetomb.resultPesquisaUsuarioAlocacao}"
+								var="resultPesquisaUsuarioAlocacao"
+								emptyMessage="Sem resultados de pesquisa">
+								<p:column headerText="Nome">
+									<p:outputLabel value="#{resultPesquisaUsuarioAlocacao.nome}" />
+								</p:column>
+
+								<p:column headerText="Email">
+									<p:outputLabel value="#{resultPesquisaUsuarioAlocacao.email}" />
+								</p:column>
+
+								<p:column headerText="Alocar" styleClass="width-coluna-botao">
+									<p:commandButton icon="ui-icon-arrowthickstop-1-e"
+										actionListener="#{projetomb.alocarUsuario(resultPesquisaUsuarioAlocacao)}" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:outputPanel>
+
+					<div class="p-grid p-justify-end">
+						<div class="p-col-3">
+							<p:commandButton styleClass="width-100-percent"
+								icon="ui-icon-check" value="OK"
+								onclick="PF('dialog-alocacao-usuario').hide()" update="@form" />
+						</div>
+					</div>
+
+				</div>
+
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
